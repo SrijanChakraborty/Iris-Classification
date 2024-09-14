@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+    <title>Preview</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        /* Center text in table headings and cells */
+        table th, table td {
+            text-align: center;
+        }
+        /* Optional: Center the entire table if needed */
+        .table-container {
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Data Preview</h1>
+        <div class="table-container">
+            <!-- Display the DataFrame table -->
+            {{ df_view|safe }}
+        </div>
+    </div>
+</body>
+</html>

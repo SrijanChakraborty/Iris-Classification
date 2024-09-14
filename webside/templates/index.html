@@ -1,1 +1,214 @@
-fff
+{% extends "material/base.html" %} {% block content %}
+<div class="showcase container blue">
+  <div class="row">
+    <div class="col 12 m10 offset-ml center">
+      <h2>Iris Classification Predictor</h2>
+      <p>Machine Learning based Web App for Iris Classification detection</p>
+      <a
+        href="{{ url_for('index') }}"
+        class="btn btn-small blue black-text waves-effect waves-dark lighten-3"
+        >Reset</a
+      >
+      <a
+        href="{{ url_for('preview') }}"
+        class="btn btn-small white black-text waves-effect waves-dark"
+        >View Dataset</a
+      >
+<style>
+    .showcase.container.blue h2 {
+        color: #fdfdfd; /* Change to your desired color */
+    }
+    .showcase.container.blue p {
+        color: #ffffff; /* Change to your desired color */
+    }
+</style>
+    </div>
+  </div>
+</div>
+
+<section class="section section-signup">
+  <div class="container">
+    <div class="row">
+      <div class="col s12 m4">
+        <div
+          class="card-panel grey lighten-4 grey-text text-darken-4 z-depth-0"
+        >
+          <form action="{{ url_for('analyze') }}" method="POST">
+            <style>
+              .range-container {
+                position: relative;
+                width: 100%;
+              }
+
+              .range-label {
+                position: absolute;
+                top: -30px; /* Adjust as needed to place above the slider */
+                left: 50%;
+                transform: translateX(-50%);
+                font-weight: bold;
+                color: #0f4685;
+              }
+            </style>
+
+            <!-- Sepal Length Input with Floating Label -->
+            <div class="input-field">
+              <div class="range-container">
+                <p>Sepal Length</p>
+                <span id="sepal_lengthValue" class="range-label">0</span>
+                <input
+                  type="range"
+                  id="sepal_lengthInput"
+                  name="sepal_length"
+                  min="4"
+                  max="8"
+                  value="0"
+                  step="0.1"
+                  oninput="updateSliderValue('sepal_lengthInput', 'sepal_lengthValue')"
+                />
+              </div>
+            </div>
+            <div class="input-field">
+              <div class="range-container">
+                <p>Sepal Width</p>
+                <span id="sepal_widthValue" class="range-label">0</span>
+                <input
+                  type="range"
+                  id="sepal_widthInput"
+                  name="sepal_width"
+                  min="2"
+                  max="5"
+                  value="0"
+                  step="0.1"
+                  oninput="updateSliderValue('sepal_widthInput', 'sepal_widthValue')"
+                />
+              </div>
+            </div>
+
+            <!-- Petal Length Input -->
+            <div class="input-field">
+              <div class="range-container">
+                <p>Petal Length</p>
+                <span id="petal_lengthValue" class="range-label">0</span>
+                <input
+                  type="range"
+                  id="petal_lengthInput"
+                  name="petal_length"
+                  min="0"
+                  max="7"
+                  value="0"
+                  step="0.1"
+                  oninput="updateSliderValue('petal_lengthInput', 'petal_lengthValue')"
+                />
+              </div>
+            </div>
+
+            <!-- Petal Width Input -->
+            <div class="input-field">
+              <div class="range-container">
+                <p>Petal Width</p>
+                <span id="petal_widthValue" class="range-label">0</span>
+                <input
+                  type="range"
+                  id="petal_widthInput"
+                  name="petal_width"
+                  min="0"
+                  max="3"
+                  value="0"
+                  step="0.1"
+                  oninput="updateSliderValue('petal_widthInput', 'petal_widthValue')"
+                />
+              </div>
+            </div>
+
+            <!-- Model Selection -->
+            <div class="input-field">
+              <select id="role" name="model_choice">
+                 <option value="logitmodel">Logistic Regression</option>
+                <option value="knnmodel">K-Nearest Neighbour</option>
+                <option value="svmmodel">SVM</option>
+              </select>
+              <label for="role">Select ML Algorithm</label>
+            </div>
+
+            <!-- Submit and Reset Buttons -->
+            <input
+              type="submit"
+              value="Predict"
+               style="background-color: #2196F3; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;"
+             
+            />
+            <input
+              type="reset"
+              value="Clear"
+              style="background-color: #2196F3; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;"
+            />
+          </form>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div class="col s12 m4 offers">
+        <div
+          class="card-panel blue lighten-4 grey-text text-darken-4 z-depth-0"
+        >
+          <p>Sepal Length: {{ sepal_length }}</p>
+          <p>Sepal Width: {{ sepal_width }}</p>
+          <p>Petal Length: {{ petal_length }}</p>
+          <p>Petal Width: {{ petal_width }}</p>
+          Using {{ model_selected }} on {{ clean_data }}
+        </div>
+      </div>
+
+      <!-- Prediction Section -->
+      <div class="col s12 m4 offers">
+        <h5>Prediction</h5>
+        <div class="collection" role="alert">
+          <p class="collection-item active blue">
+            Predicted result = {{ result_prediction }}
+          </p>
+        </div>
+        <div class="card-image waves-effect waves-block waves-light">
+          {% if result_prediction == ['versicolor'] %}
+          <img
+            src="static/imgs/iris_versicolor.jpg"
+            width="200px"
+            height="200px"
+          />
+          {% elif result_prediction == ['setosa'] %}
+          <img src="static/imgs/iris_setosa.jpg" width="200px" height="200px" />
+          {% elif result_prediction == ['virginica'] %}
+          <img
+            src="static/imgs/iris_virginica.jpg"
+            width="200px"
+            height="200px"
+          />
+          {% else %}
+          <p></p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} {% block scripts %} {{ super() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $("select").formSelect();
+  });
+
+  function updateSliderValue(inputId, labelId) {
+    var input = document.getElementById(inputId);
+    var label = document.getElementById(labelId);
+    label.innerHTML = input.value;
+
+    // Calculate the position of the label relative to the slider thumb
+    var rangeWidth = input.offsetWidth;
+    var min = input.min;
+    var max = input.max;
+    var newValue = ((input.value - min) * 100) / (max - min);
+    label.style.left = `calc(${newValue}% + (${8 - newValue * 0.15}px))`; // Adjust based on slider thumb size
+  }
+</script>
+{% endblock %}

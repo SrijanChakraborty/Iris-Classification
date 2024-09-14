@@ -4,6 +4,7 @@ import os
 from flask_material import Material
 import pandas as pd
 import numpy as np
+import sklearn
 
 app = Flask(__name__)
 Material(app)
@@ -72,4 +73,5 @@ if __name__ == '__main__':
     # production
     # serve(app, host="localhost", port=4000)
     # Development
+    print('The scikit-learn version is {}.'.format(sklearn.__version__))
     app.run(debug=True, host='localhost', port=4000)

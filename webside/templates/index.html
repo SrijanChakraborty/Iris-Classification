@@ -124,7 +124,6 @@
             <div class="input-field">
               <select id="role" name="model_choice">
                  <option value="logitmodel">Logistic Regression</option>
-                <option value="knnmodel">K-Nearest Neighbour</option>
                 <option value="svmmodel">SVM</option>
               </select>
               <label for="role">Select ML Algorithm</label>
@@ -168,24 +167,27 @@
           </p>
         </div>
         <div class="card-image waves-effect waves-block waves-light">
-          {% if result_prediction == ['versicolor'] %}
-          <img
-            src="static/imgs/iris_versicolor.jpg"
-            width="200px"
-            height="200px"
-          />
-          {% elif result_prediction == ['setosa'] %}
-          <img src="static/imgs/iris_setosa.jpg" width="200px" height="200px" />
-          {% elif result_prediction == ['virginica'] %}
-          <img
-            src="static/imgs/iris_virginica.jpg"
-            width="200px"
-            height="200px"
-          />
+          {% if result_prediction == 'Iris-versicolor' %}
+          <img src="{{ url_for('static', filename='img/iris_versicolor.jpg') }}" width="200px" height="200px">
+
+          {% elif result_prediction == 'Iris-setosa' %}
+          <img src="{{ url_for('static', filename='img/iris_setosa.jpg') }}" width="200px" height="200px">
+
+          {% elif result_prediction == 'Iris-virginica' %}
+           <img src="{{ url_for('static', filename='img/iris_virginica.jpg') }}" width="200px" height="200px">
+
           {% else %}
           <p></p>
           {% endif %}
         </div>
+        <style>
+          .card-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Adjust if needed */
+}
+        </style>
       </div>
     </div>
   </div>

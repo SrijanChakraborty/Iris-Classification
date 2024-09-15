@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 import pickle
+import joblib
 import os
 from flask_material import Material
 import pandas as pd
 import numpy as np
 import sklearn
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 Material(app)
 
 @app.route('/')
@@ -35,43 +36,39 @@ def preview():
 
 @app.route('/', methods=["POST"])
 def analyze():
-	if request.method == 'POST':
-		petal_length = request.form['petal_length']
-		sepal_length = request.form['sepal_length']
-		petal_width = request.form['petal_width']
-		sepal_width = request.form['sepal_width']
-		model_choice = request.form['model_choice']
+    if request.method == 'POST':
+        petal_length = request.form['petal_length']
+        sepal_length = request.form['sepal_length']
+        petal_width = request.form['petal_width']
+        sepal_width = request.form['sepal_width']
+        model_choice = request.form['model_choice']
 
-		# Clean the data by convert from unicode to float
-		sample_data = [sepal_length, sepal_width, petal_length, petal_width]
-		clean_data = [float(i) for i in sample_data]
+        # Clean the data by converting from unicode to float
+        sample_data = [sepal_length, sepal_width, petal_length, petal_width]
+        clean_data = [float(i) for i in sample_data]
 
-		# Reshape the Data as a Sample not Individual Features
-		ex1 = np.array(clean_data).reshape(1, -1)
+        # Reshape the data as a sample, not individual features
+        ex1 = np.array(clean_data).reshape(1, -1)
 
-		# Reloading the Model
-		# if model_choice == 'logitmodel':
-		#     logit_model = joblib.load('data/logit_model_iris.pkl')
-		#     result_prediction = logit_model.predict(ex1)
-		# elif model_choice == 'knnmodel':
-		# 	knn_model = joblib.load('data/knn_model_iris.pkl')
-		# 	result_prediction = knn_model.predict(ex1)
-		# elif model_choice == 'svmmodel':
-		# 	knn_model = joblib.load('data/svm_model_iris.pkl')
-		# 	result_prediction = knn_model.predict(ex1)
+        # Reloading the model
+        if model_choice == 'logitmodel':
+            logit_model = joblib.load(
+                'C:\\Users\\Srijan\\Desktop\\Internship\\Iris-Classification\\webside\\PickleFile\\logit_model_iris.pkl')
+            result_prediction = logit_model.predict(ex1)
+        elif model_choice == 'svmmodel':
+            with open(os.path.join(app.root_path, 'PickleFile/SVM.pickle'), 'rb') as file:
+                svm_model = pickle.load(file)
+            result_prediction = svm_model.predict(ex1)
 
-	return render_template('index.html', petal_width=petal_width,
-                        sepal_width=sepal_width,
-                        sepal_length=sepal_length,
-                        petal_length=petal_length,
-                        clean_data=clean_data,
-                        # result_prediction=result_prediction,
-                        model_selected=model_choice)
+    result_prediction = result_prediction[0]
+    return render_template('index.html', petal_width=petal_width,
+                           sepal_width=sepal_width,
+                           sepal_length=sepal_length,
+                           petal_length=petal_length,
+                           clean_data=clean_data,
+                           result_prediction=result_prediction,
+                           model_selected=model_choice)
 
 
 if __name__ == '__main__':
-    # production
-    # serve(app, host="localhost", port=4000)
-    # Development
-    print('The scikit-learn version is {}.'.format(sklearn.__version__))
     app.run(debug=True, host='localhost', port=4000)

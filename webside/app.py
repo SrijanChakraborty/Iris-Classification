@@ -5,7 +5,6 @@ import os
 from flask_material import Material
 import pandas as pd
 import numpy as np
-import sklearn
 
 app = Flask(__name__, static_folder='static')
 Material(app)
@@ -20,17 +19,13 @@ def preview():
     csv_path = r'C:\Users\Srijan\Desktop\Internship\Iris-Classification\Dataset\Iris.csv'
     print(f"CSV Path: {csv_path}")
 
-    # Check if the file exists
     if not os.path.exists(csv_path):
         return "File not found!", 404
 
-    # Read the CSV file
     df = pd.read_csv(csv_path)
 
-    # Convert the dataframe to an HTML table
     df_html = df.to_html(classes='table table-striped', index=False)
 
-    # Render the template with the dataframe passed to it
     return render_template("preview.html", df_view=df_html)
 
 
@@ -43,14 +38,10 @@ def analyze():
         sepal_width = request.form['sepal_width']
         model_choice = request.form['model_choice']
 
-        # Clean the data by converting from unicode to float
         sample_data = [sepal_length, sepal_width, petal_length, petal_width]
         clean_data = [float(i) for i in sample_data]
-
-        # Reshape the data as a sample, not individual features
         ex1 = np.array(clean_data).reshape(1, -1)
 
-        # Reloading the model
         if model_choice == 'logitmodel':
             logit_model = joblib.load(
                 'C:\\Users\\Srijan\\Desktop\\Internship\\Iris-Classification\\webside\\PickleFile\\logit_model_iris.pkl')
